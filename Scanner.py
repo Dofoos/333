@@ -26,7 +26,7 @@ try:    # not my most elegant input checker
 except:
     whatdo = 0
 
-
+output = ''
 # subnet scan
 x = True
 while x is True:
@@ -37,6 +37,7 @@ while x is True:
             #se = pandas.Series(honk)
             #print('Panda:', se)
             print('SUBNET SCAN:\n__________\n', honk)
+            output = honk
             x = False
         else:
             pass
@@ -44,6 +45,7 @@ while x is True:
             print('Scanning LocalHost...')
             arp = dis_host.nmap_arp_discovery('localhost')
             print('ARP DISCOVERY SCAN: \n___________\n', arp)
+            output = arp
             x = False
         else:
             pass
@@ -51,11 +53,14 @@ while x is True:
             print('Target Scan')
             w = True
             while w is True:
-                target = input('Input target IP: \n>>>:')
-                honk = disco.scan_top_ports(target)
+                try:
+                    target = input('Input target IP: \n>>>:')
+                    scan = disco.scan_top_ports(target)
+                except:
+                    continue
 
-
-                print('SUBNET SCAN:\n__________\n', honk)
+                print('PORT SCAN:\n__________\n', scan)
+                output = scan
                 w = False
             else:
                 w = False
@@ -71,6 +76,7 @@ while x is True:
             print('SUBNET SCAN:\n__________\n', honk)
             arp = dis_host.nmap_arp_discovery('localhost')
             print('ARP DISCOVERY SCAN: \n___________\n', arp)
+            output = arp, honk
             x = False
         else:
             pass
@@ -90,27 +96,26 @@ try:
 except:
     export = 2
 
-print(':', export)
+print(':', export)  # checks
+print(type(output))
 
 if export == 1:   # it prints both?
     print('Exporting...')
-    with open('scanner.csv', newline='') as csvfile:
-        
+    with open('ScanData.csv','w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=':', quotechar=',')
+        writer.writerows([output])
+
 else:
     print('Goodbuy')
 
 
-
+# attempt to format
 #numpy
 #t = literal_eval(honk)
 #result_array = numpy.arrat([[v[j] for j in ['addr','addrtype','hostname','ptr','ports']] for k, v in t.items()])
 #print(result_array)
-
 # pandas
-#se = pandas.Series(honk)
+#se = pandas.Series(
+# honk)
 #print('Panda:',se)
 
-#writes to cvs attempts to sort
-#output
-#print('SUBNET SCAN:\n__________\n',honk)
-#print('ARP DISCOVERY SCAN: \n___________\n' , arp)
